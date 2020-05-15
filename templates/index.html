@@ -1,0 +1,501 @@
+﻿<!DOCTYPE html>
+
+
+<html>
+<head>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Resources Accounting Tool</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap-slider.css">
+    <link href="../static/css/styles.css" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../static/bootstrap/bootstrap.min.js"></script>
+    <script src="../static/bootstrap/bootstrap-slider.js"></script>
+
+    <script src="https://maps.google.com/maps/api/js?v=3.38&key=AIzaSyDWtKWNEapqRC6qdX_rO9oAQfS2CPkWtU0&libraries=drawing"></script>
+
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+    <!-- Scripts for load/save KML files -->
+    <script src="../static/js/xmlwriter.js"></script>
+    <script src="../static/js/togeojson.js"></script>
+    <script src="../static/js/kml.js"></script>
+    <!-- Scripts for load/save KML files -->
+
+
+    <script src="../static/js/extents.js"></script>
+    <script src="../static/js/chart.js"></script>
+    <script src="../static/js/script.js"></script>
+
+
+</head>
+
+<body>
+    
+
+    <div class="navbar navbar-custom navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <h3>Resources Accounting Tool</h3>
+            </div>
+           
+            <div class="navbar-collapse collapse">
+               
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://www.icimod.org" target="_blank" style="background-color: #393457; padding-top: 20px; padding-bottom: 0px;"><img src="../static/img/logo-icimod.png" /></a></li>               
+                    <li><img src="../static/img/separator.png" style="padding-top: 16px; background-color: #5F5F7D; " /></li>
+                    <li><a data-toggle="modal" href="#AboutSection" style=" background-color:#393457; padding-top:10px; padding-bottom:0px; "><img src="../static/img/icon_about.png" style="height: 40px;"/></a></li>                    
+                </ul>
+            </div>
+                      
+        </div>
+
+       
+    </div>
+
+ 
+
+
+    <div id="main-container" class="container-fluid content">
+        <!-- Row of columns -->
+        <div class="row">
+            <div class="col-sm-2 leftview">
+                <div class="top-panel" style="overflow-x:hidden;overflow-y:auto;">
+
+                    <div style="padding-left: 20px; padding-top: 15px; padding-right: 20px;">
+
+                        <div style="font-size: medium">
+                            
+                            <b>Tool Control</b> 
+                            
+
+                            <br /><br />
+                            
+                        </div>
+                        <div>
+                           
+
+                           
+
+                            <div class="row form-group" style="font-size: small; padding-left: 20px; ">
+                                <div>
+                                    <input type="radio" id="rdBasin" name="inputAreaType"  checked="checked" onclick="updateControls('basin');" />
+                                    <label for="inputAreaType" class="form-control-label">Basin:</label>
+                                </div>
+                                <div style="width: 150px;">
+                                    <select id="selBasin" class="form-control input-sm" onchange="selectBasin();">                                       
+                                        <optgroup label="Indus">
+                                            <option value="Kabul">Kabul</option>
+                                            <option value="Upper Indus">Upper Indus</option>                                          
+                                        </optgroup>
+                                        <optgroup label="Brahmaputra">
+                                            <option value="Subansiri">Subansiri</option>
+                                            <option value="Amo Chu">Amo Chu</option>
+                                            <option value="Brahmaputra">Brahmaputra</option>
+                                            <option value="Dihang">Dihang</option>
+                                            <option value="Kameng">Kameng</option>
+                                            <option value="Manas">Manas</option>                                            
+                                            <option value="Punatsang Chu">Punatsang Chu</option>
+                                            <option value="Tista">Tista</option>                                           
+                                        </optgroup>
+                                        <optgroup label="Ganges">
+                                            <option value="Gandaki" selected>Gandaki</option>
+                                            <option value="Ghaghara">Ghaghara</option>
+                                            <option value="Karnali">Karnali</option>
+                                            <option value="Koshi">Koshi</option>
+                                            <option value="Pelkhu">Pelkhu</option>
+                                            <option value="Upper Ganga">Upper Ganges</option>
+                                            <option value="Yamuna">Yamuna</option>
+                                        </optgroup>
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            
+
+                            <div class="row form-group" style="font-size: small; padding-left:20px;">
+                                <div>
+                                    <input type="radio" id="rdLandscape" name="inputAreaType" onclick="updateControls('landscape');" />
+                                    <label for="inputAreaType" class="form-control-label">Landscape:</label>
+                                </div>
+                                <div style="width:150px;">
+                                    <select id="selLandscape" class="form-control input-sm" onchange="selectLandscape();" disabled>
+                                        <option value="CherrapunjeeChittagong">Cherrapunjee-Chittagong</option>
+                                        <option value="BrahmaputraSalween">HI-LIFE</option>
+                                        <option value="Kailash" selected>Kailash</option>
+                                        <option value="Kangchenjunga">Kangchenjunga</option>
+                                        <option value="KarakoramPamirWakhan">Karakoram-Pamir-Wakhan</option>
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            
+                            <div class="row form-group" style="font-size: small; padding-left:20px;">
+                                
+                                    <input type="radio" id="rdAOI" name="inputAreaType" onclick="updateControls('aoi');" />
+                                    <label for="inputAreaType" class="form-control-label">Draw Polygon</label>
+                                
+
+                            </div>
+
+
+                            <div style="text-align:right;">
+                                <button type="button" class="btn" onclick="calculateSummary();">&nbsp;&nbsp;Compute&nbsp;&nbsp;</button>
+                            </div>
+
+                            <br />
+                            
+                            <span style="font-size:smaller">
+                                Choose a basin or landscape, or draw a polygon and click <b>Compute</b> button to run the tool. 
+                            </span>
+
+                        </div>
+
+
+
+                    </div>
+
+
+                  
+
+                </div>
+                <div class="bottom-left-panel">
+
+                    <ul class="nav nav-tabs" style="padding-left: 5px; padding-top: 10px;">
+                        <li class="active"><a data-toggle="tab" href="#toc">Layers</a></li>
+                        <li><a data-toggle="tab" href="#legend">Legend</a></li>
+
+                    </ul>
+
+                    <div class="tab-content">
+                        <div id="toc" class="tab-pane fade in active">
+
+
+                            <div id="layerPanel" style="padding-left: 20px; padding-top: 20px; font-size: small;">
+                                <div class="checkbox">
+                                    <label><input type="checkbox" checked="checked" id="outlineLayer" onclick="ShowHideOutlineLayer();">HKH Outline</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" id="lcoverLyr" onclick="ShowHideLCover();">Land Cover 2018</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" id="elevLyr" onclick="ShowHideElevation();">Elevation (GTOPO30)</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" id="flLyr" onclick="ShowHideForestLoss();">Forest Loss</label>
+                                </div>
+                                <div style="font-size: 10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Year:&nbsp;
+                                    <input id="flRange" type="text" class="span2" value="" data-slider-min="2001" data-slider-max="2018" data-slider-step="1" data-slider-value="2018" style="width:110px;" disabled="disabled" />
+                                    <b>&nbsp;&nbsp;&nbsp;&nbsp;<label id="flYear">2018</label></b>
+                                </div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" id="landslideLyr" onclick="ShowHideLandslide();">Landslide</label>
+                                    </div>
+                                <div style="font-size: 10px;">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Year:&nbsp;
+
+                                    <input id="lsRange" type="text" class="span2" value="" data-slider-min="2004" data-slider-max="2017" data-slider-step="1" data-slider-value="2017" style="width:110px;" disabled="disabled" />
+                                    <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label id="lsYear">2017</label></b>
+                                    
+                                    </div>
+
+                                    <input type="file" id="fileOpen" style="visibility: hidden; width: 2px;" />
+
+                                </div>
+                        </div>
+                        <div id="legend" class="tab-pane fade" style="padding-top: 20px;">
+
+                            <table style="border: 0px;">
+                                <tr>
+                                    <td>
+                                        <img src="../static/img/legend.jpg">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                            </table>
+
+
+                        </div>
+
+                    </div>
+                 
+                </div>
+
+            </div>
+
+
+            <div class="col-sm-7 mainview">
+                <div class="top-panel">
+
+                    <div id="map"></div>
+                </div>
+                <div class="bottom-panel">
+
+                    
+                    <div id="dataTab" class="bottom-panel-menu">
+
+                        
+                        &nbsp;&nbsp;
+                        <button type="button" class="btn btn-default" id="btnWclim" onclick="createChart('wclim');">
+                           Temperature and Rainfall
+                        </button>
+
+                        &nbsp;&nbsp;
+                        <button type="button" class="btn btn-default" id="btnLandcover" onclick="createChart('lcover');">
+                            Land Cover
+                        </button>
+                        &nbsp;&nbsp;
+                        <button type="button" class="btn btn-default" id="btnForestLoss" onclick="createChart('forestloss');">
+                            Forest Loss
+                        </button>
+                        &nbsp;&nbsp;
+                        <button type="button" class="btn btn-default" id="btnForestFire" onclick="createChart('forestfire');">
+                            Forest Fire
+                        </button>
+                        &nbsp;&nbsp;
+                        <button type="button" class="btn btn-default" id="btnNDVI" onclick="createChart('ndvi');">
+                            NDVI
+                        </button>
+                        &nbsp;&nbsp;
+                        <button type="button" class="btn btn-default" id="btnChirps" onclick="createChart('chirps');">
+                            CHIRPS Rainfall
+                        </button>
+                        &nbsp;&nbsp;
+                        <button type="button" class="btn btn-default" id="btnLandslide" onclick="createChart('landslide');">
+                            Landslide
+                        </button>
+                    </div>
+                    <div id="chartHolder" class=" bottom-panel-chart">
+                        <div id="chartDiv"></div>
+                    </div>    
+
+                    </div>
+
+            </div>
+
+            <div class="col-sm-3 rightview">
+                <div class="top-right-panel">
+
+
+                    <div style="padding-left:20px;padding-top:20px;">
+
+                        <div style="font-size: medium">
+                            <b>Key Information</b>
+                            <br /><br />
+                        </div>
+                        <table style="border: 0px;">
+
+                            <tr style="padding-top:20px;">
+                                <td style="width:80px">
+
+                                    <img src="../static/img/icon_population.png" style="width: 50px; height: 50px; -webkit-border-radius: 25px; -moz-border-radius: 25px; border-radius: 25px; background-color: #e2843a; ">
+
+                                </td>
+                                <td>
+                                    <span style="color:#787878">Total population</span>
+                                    <h4 id="totalPop" style="color: #606060; font-size: 16px; font-weight: bold; "></h4>
+                                    <img src="../static/img/loading.gif" id="loading-indicator-1" style="display:none" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr style="padding-top:20px;">
+                                <td style="width:80px">
+
+                                    <img src="../static/img/icon_area.png" style="width: 50px; height: 50px; -webkit-border-radius: 25px; -moz-border-radius: 25px; border-radius: 25px; background-color: #76b4fd; ">
+
+                                </td>
+                                <td>
+                                    <span style="color:#787878">Area</span>
+                                    <h4 id="totalArea" style="color:#606060;font-size:16px; font-weight:bold;"></h4>
+                                    <img src="../static/img/loading.gif" id="loading-indicator-2" style="display:none" />
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr style="padding-top:20px;">
+                                <td style="width:80px">
+
+                                    <img src="../static/img/icon_elevation.png" style="width: 50px; height: 50px; -webkit-border-radius: 25px; -moz-border-radius: 25px; border-radius: 25px; background-color: #99c52a; ">
+
+                                </td>
+                                <td>
+                                    <span style="color:#787878">Elevation Range</span>
+                                    <h4 id="elevationRange" style="color: #606060; font-size: 16px; font-weight: bold; "></h4>
+                                    <img src="../static/img/loading.gif" id="loading-indicator-3" style="display:none" />
+
+                                </td>
+                            </tr>
+
+
+                        </table>
+
+                    </div>
+
+
+
+                    </div>
+                <div class="bottom-right-panel">
+
+                    
+                   
+
+                    <div style="padding-left:20px;padding-top:20px;">
+
+                        <div style="font-size: medium">
+                            <b>GBIF Occurrence</b>
+                            <br /><br />
+                        </div>
+                        <table style="border: 0px;">
+
+                            <tr style="padding-top:20px;">
+                                <td style="width:80px">
+
+                                    <img src="../static/img/icon_animal.png" style="width: 50px; height: 50px; -webkit-border-radius: 25px; -moz-border-radius: 25px; border-radius: 25px; background-color: #e2843a; ">
+
+                                </td>
+                                <td>
+                                    <span style="color:#787878">No. of Animal Occurrence</span>
+                                    <h4 id="animalOccurrence" style="color: #606060; font-size: 16px; font-weight: bold; "></h4>
+                                    <img src="../static/img/loading.gif" id="loading-indicator-animal" style="display:none" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr style="padding-top:20px;">
+                                <td style="width:80px">
+
+                                    <img src="../static/img/icon_plant.png" style="width: 50px; height: 50px; -webkit-border-radius: 25px; -moz-border-radius: 25px; border-radius: 25px; background-color: #99c52a; ">
+
+                                </td>
+                                <td>
+                                    <span style="color:#787878">No. of Plant Occurrence</span>
+                                    <h4 id="plantOccurrence" style="color:#606060;font-size:16px; font-weight:bold;"></h4>
+                                    <img src="../static/img/loading.gif" id="loading-indicator-plant" style="display:none" />
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    &nbsp;
+
+                                </td>
+                                <td>&nbsp;</td>
+                            </tr>
+
+
+
+                        </table>
+
+                        
+                    </div>
+
+
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+    <script>
+
+        $(document).ready(function () {
+
+            
+            initialize('{{ lcurl }}', '{{ elevurl }}');
+
+            // With JQuery
+            $("#lsRange").slider({});
+            $("#flRange").slider({});
+
+
+            //Setup drawingManager and load chart and info-graphics
+            startupApp();
+
+           
+        });
+
+    </script>
+
+
+
+
+    <!-- Modal -->
+    <div id="AboutSection" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class=" ">Resources Accounting Tool</h3>
+                </div>
+                <div class="modal-body" style="font-size:small;">
+                    <p>
+                        The information about various biophysical and socio-economic parameters is essential for research and development related works. This application allows users to quickly find information about resources for the user defined area. 
+                        </p>
+
+                    <p>
+                        The application carries out all the analyses or geo-processings in Google Earth Engine, the Google’s cloud based platform, except for species occurrence data which are obtained directly from Global Biodiversity Information Facility (GBIF).
+
+    <br /><br />
+</p>
+                    
+                   <p>          
+                       <h4><b>Data</b></h4> 
+                       The application uses following data layers:
+                       <ul>
+                           <li><a href="http://sedac.ciesin.columbia.edu/data/collection/gpw-v4" target="_blank">CIESIN 1KM Gridded Population of World for 2020</a></li>
+                           <li><a href="http://www.worldclim.org/version1" target="_blank">WorldClim 1km grid dataset of monthly mean temperature and precipitation for the period of 1960-1990</a> </li>
+                           <li><a href="http://chg.geog.ucsb.edu/data/chirps/" target="_blank">CHIRPS daily time series precipitation data</a> </li>
+                           <li><a href="https://lpdaac.usgs.gov/dataset_discovery/modis/modis_products_table/mcd12q1" target="_blank">MODIS 500m global land cover data for 2018</a></li>                           
+                           <li><a href="https://lta.cr.usgs.gov/GTOPO30" target="_blank">GTOPO30 - Global 30 Arc-Second (~1KM) elevation data</a> </li>   
+                           <li><a href="https://www.nat-hazards-earth-syst-sci.net/18/2161/2018/" target="_blank"> Global fatal landslide occurrence from 2004 to 2016</a> </li>   
+                           <li><a href="http://earthenginepartners.appspot.com/science-2013-global-forest/download_v1.6.html" target="_blank">Hansen Global Forest Change v1.6 (2000-2018)</a> </li>                          
+                           <li><a href="https://firms.modaps.eosdis.nasa.gov" target="_blank">MODIS Active Fire data</a> </li>
+                           <li><a href="http://www.gbif.org/occurrence" target="_blank">GBIF Occurrence data</a> </li>
+                           
+                       </ul>                      
+                       <br />
+                   </p>        
+                    <p>
+                        <h4><b>Running the Tool</b></h4>
+                        <ul>
+                            <li>Choose a basin or landscape, and click <b>Compute</b> button to run the tool.</li>
+                            <li>Alternatively, choose <i>Draw Polygon</i> option, draw a polygon or rectangle using the tools visible at the top-center of the map, and then click <b>Compute</b> button to run the tool.</li>
+                        </ul>
+                    </p> 
+
+                            
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</body>
+</html>
+
